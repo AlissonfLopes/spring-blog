@@ -3,7 +3,6 @@ package com.fiap.spring_blog.controller;
 import com.fiap.spring_blog.model.Autor;
 import com.fiap.spring_blog.service.AutorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -60,5 +61,35 @@ public class ArtigoServiceImpl implements ArtigoService {
     public List<Artigo> findByDataGreaterThan(LocalDateTime data) {
         Query query = new Query(Criteria.where("data").gt(data));
         return mongoTemplate.find(query, Artigo.class);
+    }
+
+    @Override
+    public List<Artigo> findByDataAndStatus(LocalDateTime data, Integer status) {
+        Query query = new Query (Criteria.where("data").is(data)
+                .and("status").is(status));
+        return mongoTemplate.find(query, Artigo.class);
+    }
+
+    @Override
+    public void atualizarArtigo(Artigo updateArtigo) {
+        this.artigoRepository.save(updateArtigo);
+    }
+
+    @Override
+    public void atualizarArtigoURL(String codigo, String URL) {
+        Query query = new Query(Criteria.where("codigo").is(codigo));
+        Update update = new Update().set("url", URL);
+        this.mongoTemplate.updateFirst(query, update, Artigo.class);
+    }
+
+    @Override
+    public void deleteById(String codigo){
+        this.artigoRepository.deleteById(codigo);
+    }
+
+    @Override
+    public void deleteArtigoById(String id) {
+        Query query = new Query(Criteria.where("id").is(id));
+        this.mongoTemplate.remove(query, Artigo.class);
     }
 }

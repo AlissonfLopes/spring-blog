@@ -34,4 +34,29 @@ public class ArtigoController {
     public Artigo criarArtigo(@RequestBody Artigo artigo) {
         return this.artigoService.criarArtigo(artigo);
     }
+
+    @GetMapping("/data-status")
+    public List<Artigo> pesquisarPorDataAndStatus(@RequestParam LocalDateTime data, @RequestParam Integer status) {
+        return  this.artigoService.findByDataAndStatus(data, status);
+    }
+
+    @PutMapping
+    public void atualizarArtigo(@RequestBody Artigo artigo) {
+        this.artigoService.atualizarArtigo(artigo);
+    }
+
+    @PutMapping("/{codigo}")
+    public void atualizarArtigoURL(@PathVariable String codigo, @RequestBody String url) {
+        this.artigoService.atualizarArtigoURL(codigo, url);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletarArtigo(@PathVariable String id) {
+        this.artigoService.deleteById(id);
+    }
+
+    @DeleteMapping("/delete")
+    public void deletarArtigosPorId(@RequestParam("id") String id) {
+        this.artigoService.deleteArtigoById(id);
+    }
 }

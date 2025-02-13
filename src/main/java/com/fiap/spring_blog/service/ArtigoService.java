@@ -11,5 +11,10 @@ public interface ArtigoService {
     public Artigo obterPorCodigo(String codigo);
     public Artigo criarArtigo(Artigo artigo);
     public List<Artigo> findByDataGreaterThan(LocalDateTime data);
+    public List<Artigo> findByDataAndStatus(LocalDateTime data, Integer status);
+    public void atualizarArtigo(Artigo artigo);
+    public void atualizarArtigoURL(String codigo, String URL);
+    public void deleteById(String codigo);
+    public void deleteArtigoById(String id);
 
 }
