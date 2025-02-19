@@ -3,6 +3,7 @@ package com.fiap.spring_blog.controller;
 import com.fiap.spring_blog.model.Artigo;
 import com.fiap.spring_blog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -58,5 +59,20 @@ public class ArtigoController {
     @DeleteMapping("/delete")
     public void deletarArtigosPorId(@RequestParam("id") String id) {
         this.artigoService.deleteArtigoById(id);
+    }
+
+    @GetMapping("/status-data")
+    public List<Artigo> findByStatusAndDataArtigoList (@RequestParam Integer status, @RequestParam LocalDateTime dataArtigo) {
+        return this.artigoService.findByStatusAndDataArtigoList(status, dataArtigo);
+    }
+
+    @GetMapping("/status")
+    public List<Artigo> findByStatusEquals(@RequestParam Integer status) {
+        return this.artigoService.findByStatusEquals(status);
+    }
+
+    @GetMapping("/date-hour")
+    public List<Artigo> findByDateAndHour(@RequestParam LocalDateTime date, @RequestParam LocalDateTime hour) {
+        return this.artigoService.findByDateAndHour(date, hour);
     }
 }

@@ -16,5 +16,8 @@ public interface ArtigoService {
     public void atualizarArtigoURL(String codigo, String URL);
     public void deleteById(String codigo);
     public void deleteArtigoById(String id);
+    public List<Artigo> findByStatusAndDataArtigoList (Integer status, LocalDateTime date);
+    public List<Artigo> findByStatusEquals(Integer status);
+    public List<Artigo> findByDateAndHour(LocalDateTime data, LocalDateTime hour);
 
 }

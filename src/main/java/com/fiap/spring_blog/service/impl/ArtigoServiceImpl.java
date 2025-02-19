@@ -6,6 +6,7 @@ import com.fiap.spring_blog.repository.ArtigoRepository;
 import com.fiap.spring_blog.repository.AutorRepository;
 import com.fiap.spring_blog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -91,5 +92,20 @@ public class ArtigoServiceImpl implements ArtigoService {
     public void deleteArtigoById(String id) {
         Query query = new Query(Criteria.where("id").is(id));
         this.mongoTemplate.remove(query, Artigo.class);
+    }
+
+    @Override
+    public List<Artigo> findByStatusAndDataArtigoList (Integer status, LocalDateTime date) {
+        return this.artigoRepository.findByStatusAndDataArtigoList(status, date);
+    }
+
+    @Override
+    public List<Artigo> findByStatusEquals(Integer status) {
+        return this.artigoRepository.findByStatusEquals(status);
+    }
+
+    @Override
+    public List<Artigo> findByDateAndHour(LocalDateTime date, LocalDateTime hour) {
+        return this.artigoRepository.findByDateAndHour(date, hour);
     }
 }
