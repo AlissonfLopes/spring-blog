@@ -108,4 +108,27 @@ public class ArtigoServiceImpl implements ArtigoService {
     public List<Artigo> findByDateAndHour(LocalDateTime date, LocalDateTime hour) {
         return this.artigoRepository.findByDateAndHour(date, hour);
     }
+
+    @Override
+    public List<Artigo> findComplexArticles(Integer status,
+                                            LocalDateTime data,
+                                            String titulo) {
+        // The ideia here is create a filter with date less or igual
+        // than the given value
+        Criteria criteria = new Criteria();
+        criteria.and("data").lte(data);
+
+        // We need a valid status
+        if (status != null) {
+            criteria.and("Status").is(status);
+        }
+
+        // We need a valid title
+        if (titulo != null && !titulo.isEmpty()) {
+            criteria.and("titulo").regex(titulo, "i");
+        }
+
+        Query query = new Query(criteria);
+        return mongoTemplate.find(query, Artigo.class);
+    }
 }

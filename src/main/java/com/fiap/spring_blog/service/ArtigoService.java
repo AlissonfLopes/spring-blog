@@ -19,5 +19,6 @@ public interface ArtigoService {
     public List<Artigo> findByStatusAndDataArtigoList (Integer status, LocalDateTime date);
     public List<Artigo> findByStatusEquals(Integer status);
     public List<Artigo> findByDateAndHour(LocalDateTime data, LocalDateTime hour);
+    public List<Artigo> findComplexArticles(Integer status, LocalDateTime date, String titulo);
 
 }

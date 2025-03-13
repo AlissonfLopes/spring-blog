@@ -75,4 +75,11 @@ public class ArtigoController {
     public List<Artigo> findByDateAndHour(@RequestParam LocalDateTime date, @RequestParam LocalDateTime hour) {
         return this.artigoService.findByDateAndHour(date, hour);
     }
+
+    @GetMapping("/status-title-date")
+    public List<Artigo> findComplexArticles(@RequestParam Integer status,
+                                            @RequestParam LocalDateTime data,
+                                            @RequestParam String titulo) {
+        return this.artigoService.findComplexArticles(status, data, titulo);
+    }
 }
