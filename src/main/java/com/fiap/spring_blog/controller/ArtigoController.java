@@ -4,6 +4,10 @@ import com.fiap.spring_blog.model.Artigo;
 import com.fiap.spring_blog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -37,7 +41,8 @@ public class ArtigoController {
     }
 
     @GetMapping("/data-status")
-    public List<Artigo> pesquisarPorDataAndStatus(@RequestParam LocalDateTime data, @RequestParam Integer status) {
+    public List<Artigo> pesquisarPorDataAndStatus(@RequestParam LocalDateTime data,
+                                                  @RequestParam Integer status) {
         return  this.artigoService.findByDataAndStatus(data, status);
     }
 
@@ -47,7 +52,8 @@ public class ArtigoController {
     }
 
     @PutMapping("/{codigo}")
-    public void atualizarArtigoURL(@PathVariable String codigo, @RequestBody String url) {
+    public void atualizarArtigoURL(@PathVariable String codigo,
+                                   @RequestBody String url) {
         this.artigoService.atualizarArtigoURL(codigo, url);
     }
 
@@ -62,8 +68,9 @@ public class ArtigoController {
     }
 
     @GetMapping("/status-data")
-    public List<Artigo> findByStatusAndDataArtigoList (@RequestParam Integer status, @RequestParam LocalDateTime dataArtigo) {
-        return this.artigoService.findByStatusAndDataArtigoList(status, dataArtigo);
+    public List<Artigo> findByStatusAndData (@RequestParam Integer status,
+                                             @RequestParam LocalDateTime data) {
+        return this.artigoService.findByStatusAndData(status, data);
     }
 
     @GetMapping("/status")
@@ -72,7 +79,8 @@ public class ArtigoController {
     }
 
     @GetMapping("/date-hour")
-    public List<Artigo> findByDateAndHour(@RequestParam LocalDateTime date, @RequestParam LocalDateTime hour) {
+    public List<Artigo> findByDateAndHour(@RequestParam LocalDateTime date,
+                                          @RequestParam LocalDateTime hour) {
         return this.artigoService.findByDateAndHour(date, hour);
     }
 
@@ -81,5 +89,21 @@ public class ArtigoController {
                                             @RequestParam LocalDateTime data,
                                             @RequestParam String titulo) {
         return this.artigoService.findComplexArticles(status, data, titulo);
+    }
+
+    @GetMapping("/page-article")
+    public ResponseEntity<Page<Artigo>> findAll(Pageable pageable) {
+        Page<Artigo> artigos = this.artigoService.findAll(pageable);
+        return ResponseEntity.ok(artigos);
+    }
+
+    @GetMapping("/title-dataAsc")
+    public List<Artigo> findByStatusOrderByDataAsc(@RequestParam ("status") Integer status) {
+        return this.artigoService.findByStatusOrderByTituloAsc(status);
+    }
+
+    @GetMapping("/status-asc")
+    public List<Artigo> findByStatusAsc(@RequestParam ("status") Integer status) {
+        return this.artigoService.findByStatusAsc(status);
     }
 }

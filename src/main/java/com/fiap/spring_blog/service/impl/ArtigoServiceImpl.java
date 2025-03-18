@@ -7,6 +7,8 @@ import com.fiap.spring_blog.repository.AutorRepository;
 import com.fiap.spring_blog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -95,8 +97,8 @@ public class ArtigoServiceImpl implements ArtigoService {
     }
 
     @Override
-    public List<Artigo> findByStatusAndDataArtigoList (Integer status, LocalDateTime date) {
-        return this.artigoRepository.findByStatusAndDataArtigoList(status, date);
+    public List<Artigo> findByStatusAndData (Integer status, LocalDateTime data) {
+        return this.artigoRepository.findByStatusAndData(status, data);
     }
 
     @Override
@@ -130,5 +132,20 @@ public class ArtigoServiceImpl implements ArtigoService {
 
         Query query = new Query(criteria);
         return mongoTemplate.find(query, Artigo.class);
+    }
+
+    @Override
+    public Page<Artigo> findAll(Pageable pageable) {
+        return this.artigoRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Artigo> findByStatusOrderByTituloAsc(Integer status) {
+        return this.artigoRepository.findByStatusOrderByTituloAsc(status);
+    }
+
+    @Override
+    public List<Artigo> findByStatusAsc(Integer status) {
+        return this.artigoRepository.findByStatusAsc(status);
     }
 }
