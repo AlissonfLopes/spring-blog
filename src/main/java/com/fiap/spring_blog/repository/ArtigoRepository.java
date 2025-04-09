@@ -21,6 +21,7 @@ public interface ArtigoRepository extends MongoRepository<Artigo, String> {
     public List<Artigo> findByDateAndHour(LocalDateTime data, LocalDateTime hour);
 
     // Creating pagination
+    // Sort pagination query
     Page<Artigo> findAll(Pageable pageable);
 
     List<Artigo> findByStatusOrderByTituloAsc(Integer status);
