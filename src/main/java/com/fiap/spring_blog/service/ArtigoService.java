@@ -1,9 +1,12 @@
 package com.fiap.spring_blog.service;
 
 import com.fiap.spring_blog.model.Artigo;
+import com.fiap.spring_blog.model.ArtigoStatusCount;
+import com.fiap.spring_blog.model.AutorTotalArticles;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,4 +28,8 @@ public interface ArtigoService {
     public Page<Artigo> findAll(Pageable pageable);
     public List<Artigo> findByStatusOrderByTituloAsc(Integer status);
     public List<Artigo> findByStatusAsc(Integer status);
+    public List<Artigo> findByTexto(String searchTerm);
+    public List<ArtigoStatusCount> countArticlesByStatus();
+    public List<AutorTotalArticles> countArticlesByAutor();
+    public List<AutorTotalArticles> countArticlesByAutorAndPeriod(LocalDate initDate, LocalDate endDate);
 }
