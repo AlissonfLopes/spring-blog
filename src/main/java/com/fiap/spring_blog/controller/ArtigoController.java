@@ -1,6 +1,8 @@
 package com.fiap.spring_blog.controller;
 
 import com.fiap.spring_blog.model.Artigo;
+import com.fiap.spring_blog.model.ArtigoStatusCount;
+import com.fiap.spring_blog.model.AutorTotalArticles;
 import com.fiap.spring_blog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -105,5 +108,26 @@ public class ArtigoController {
     @GetMapping("/status-asc")
     public List<Artigo> findByStatusAsc(@RequestParam ("status") Integer status) {
         return this.artigoService.findByStatusAsc(status);
+    }
+
+    @GetMapping("/find-text")
+    public List<Artigo> findByTexto(@RequestParam("searhTerm") String term) {
+        return this.artigoService.findByTexto(term);
+    }
+
+    @GetMapping("count-by-status")
+    public List<ArtigoStatusCount> countArticlesByStatus() {
+        return this.artigoService.countArticlesByStatus();
+    }
+
+    @GetMapping("count-by-autor")
+    public List<AutorTotalArticles> countArticlesByAutor() {
+        return this.artigoService.countArticlesByAutor();
+    }
+
+    @GetMapping("count-by-autor-and-period")
+    public List<AutorTotalArticles> countArticlesByAutorAndPeriod(LocalDate initDate,
+                                                                  LocalDate endDate) {
+        return this.artigoService.countArticlesByAutorAndPeriod(initDate, endDate);
     }
 }
