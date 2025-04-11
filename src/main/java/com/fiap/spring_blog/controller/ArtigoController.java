@@ -6,9 +6,11 @@ import com.fiap.spring_blog.model.AutorTotalArticles;
 import com.fiap.spring_blog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -129,5 +131,14 @@ public class ArtigoController {
     public List<AutorTotalArticles> countArticlesByAutorAndPeriod(LocalDate initDate,
                                                                   LocalDate endDate) {
         return this.artigoService.countArticlesByAutorAndPeriod(initDate, endDate);
+    }
+
+    /**
+     * Here we will declare the Exceptions handlers
+     */
+    public ResponseEntity<String> handleOptmisticLockingFailureException(
+            OptimisticLockingFailureException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Concurrency error: The article was updated by another user. Please try again");
     }
 }
