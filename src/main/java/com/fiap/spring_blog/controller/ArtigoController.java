@@ -136,6 +136,7 @@ public class ArtigoController {
     /**
      * Here we will declare the Exceptions handlers
      */
+    @ExceptionHandler(OptimisticLockingFailureException.class)
     public ResponseEntity<String> handleOptmisticLockingFailureException(
             OptimisticLockingFailureException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT)

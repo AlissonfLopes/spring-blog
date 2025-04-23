@@ -9,6 +9,7 @@ import com.fiap.spring_blog.repository.AutorRepository;
 import com.fiap.spring_blog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -66,7 +67,32 @@ public class ArtigoServiceImpl implements ArtigoService {
         } else {
             artigo.setAutor(null);
         }
-        return this.artigoRepository.save(artigo);
+
+        try {
+            return this.artigoRepository.save(artigo);
+        } catch (OptimisticLockingFailureException ex) {
+
+            // 1. Get the most recent documment
+            Artigo artigoRecent = artigoRepository.findById(artigo.getCodigo()).orElse(null);
+
+            // 2. Att the disired fields
+            if (artigoRecent != null) {
+                artigoRecent.setTitulo(artigo.getTitulo());
+                artigoRecent.setTexto(artigo.getTexto());
+                artigoRecent.setAutor(artigo.getAutor());
+                artigoRecent.setStatus(artigo.getStatus());
+
+                // 3. Att the version
+                artigoRecent.setVersion(artigo.getVersion() + 1);
+
+                // 4. Save the new version of the article
+                return this.artigoRepository.save(artigoRecent);
+            } else {
+                throw new RuntimeException(
+                        "Article not find: " + artigo.getCodigo()
+                );
+            }
+        }
     }
 
     @Override
