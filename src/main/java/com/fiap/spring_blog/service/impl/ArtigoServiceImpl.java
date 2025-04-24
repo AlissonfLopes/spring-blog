@@ -7,6 +7,7 @@ import com.fiap.spring_blog.model.AutorTotalArticles;
 import com.fiap.spring_blog.repository.ArtigoRepository;
 import com.fiap.spring_blog.repository.AutorRepository;
 import com.fiap.spring_blog.service.ArtigoService;
+import com.mongodb.DuplicateKeyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -19,6 +20,8 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +57,58 @@ public class ArtigoServiceImpl implements ArtigoService {
                 .orElseThrow(()-> new IllegalArgumentException("Artigo não existe"));
     }
 
+    @Override
+    public ResponseEntity<?> create(Artigo artigo) {
+
+        if (artigo.getAutor().getCodigo() != null) {
+            Autor autor = this.autorRepository
+                    .findById(artigo.getAutor().getCodigo())
+                    .orElseThrow(() ->
+                            new IllegalArgumentException("This author does not exist"));
+
+            artigo.setAutor(autor);
+        } else {
+            artigo.setAutor(null);
+        }
+
+        try {
+          artigoRepository.save(artigo);
+          return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (DuplicateKeyException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("This article already exists");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error while creating the article" + e.getMessage());
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<?> update(String id, Artigo artigo) {
+
+        try {
+            Artigo currentArticle =
+                    this.artigoRepository.findById(id).orElseThrow(null);
+
+            if (currentArticle == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Article not found");
+            } else {
+                currentArticle.setTitulo(artigo.getTitulo());
+                currentArticle.setAutor(artigo.getAutor());
+                currentArticle.setTexto(artigo.getTexto());
+                currentArticle.setData(artigo.getData());
+            }
+
+            artigoRepository.save(artigo);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error while updating the article: " + e.getMessage());
+        }
+    }
+
+    /*
     @Transactional
     @Override
     public Artigo criarArtigo(Artigo artigo) {
@@ -94,6 +149,7 @@ public class ArtigoServiceImpl implements ArtigoService {
             }
         }
     }
+     */
 
     @Override
     public List<Artigo> findByDataGreaterThan(LocalDateTime data) {

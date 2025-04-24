@@ -5,10 +5,8 @@ import com.fiap.spring_blog.model.ArtigoStatusCount;
 import com.fiap.spring_blog.model.AutorTotalArticles;
 import com.fiap.spring_blog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +38,22 @@ public class ArtigoController {
         return this.artigoService.findByDataGreaterThan(data);
     }
 
+    /*
     @PostMapping
     public Artigo criarArtigo(@RequestBody Artigo artigo) {
         return this.artigoService.criarArtigo(artigo);
+    }
+    */
+
+    @PostMapping
+    public ResponseEntity<?> createArticle (@RequestBody Artigo artigo) {
+        return this.artigoService.create(artigo);
+    }
+
+    @PutMapping("/update-article/{id}")
+    public ResponseEntity<?> updateArticleupdate(@PathVariable("id") String id,
+                                                 @RequestBody Artigo artigo) {
+        return this.artigoService.update(id, artigo);
     }
 
     @GetMapping("/data-status")
